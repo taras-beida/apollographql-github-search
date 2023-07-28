@@ -1,0 +1,9 @@
+schema: [schema.docs.graphql, local-schema.graphql]
+extensions:
+  endpoints:
+    Default GraphQL Endpoint:
+      url: https://api.github.com/graphql
+      headers:
+        user-agent: JS GraphQL
+        authorization: 'Bearer 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'
+      introspect: false

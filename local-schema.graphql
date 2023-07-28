@@ -1,0 +1,7 @@
+extend type Repository {
+  clientRating: Int
+}
+
+extend type Query {
+  favorites: [Repository]
+}
