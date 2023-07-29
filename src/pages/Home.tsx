@@ -3,12 +3,12 @@ import { ChangeEvent, useState } from 'react'
 import { Skeleton, Stack, TextField } from '@mui/material'
 import ErrorIcon from '@mui/icons-material/Error'
 
+import RepositoryCard from '../components/RepositoryCard.tsx'
+
 import { useDebounce } from '../hooks/useDebounce.ts'
 import { useSearchRepositoriesQuery } from '../graphql/queries/search/search.generated.ts'
 
-import RepositoryItem from './RepositoryItem.tsx'
-
-const Repositories = () => {
+const Home = () => {
   const [searchValue, setSearchValue] = useState('')
   const debouncedSearchValue = useDebounce(searchValue, 500)
 
@@ -22,12 +22,13 @@ const Repositories = () => {
     setSearchValue(e.target.value)
   }
 
-  if (error)
+  if (error) {
     return (
       <div>
         <ErrorIcon /> {error.message}
       </div>
     )
+  }
 
   return (
     <div>
@@ -38,6 +39,7 @@ const Repositories = () => {
         margin="normal"
         value={searchValue}
         onChange={searchHandler}
+        sx={{ mb: 2 }}
         fullWidth
       />
 
@@ -53,7 +55,7 @@ const Repositories = () => {
         {data?.search.nodes?.map(
           (node) =>
             node?.__typename === 'Repository' && (
-              <RepositoryItem key={node.id} repository={node} />
+              <RepositoryCard key={node.id} repository={node} />
             )
         )}
       </Stack>
@@ -61,4 +63,4 @@ const Repositories = () => {
   )
 }
 
-export default Repositories
+export default Home

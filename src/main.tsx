@@ -8,19 +8,15 @@ import { CustomInMemoryCache } from './cache.ts'
 
 import App from './App.tsx'
 
-import './index.css'
-
 const httpLink = createHttpLink({
-  uri: 'https://api.github.com/graphql',
+  uri: import.meta.env.VITE_GITHUB_API,
 })
 
 const authLink = setContext((_, { headers }) => {
-  const token =
-    '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'
   return {
     headers: {
       ...headers,
-      authorization: token ? `Bearer ${token}` : '',
+      authorization: `Bearer ${import.meta.env.VITE_GITHUB_TOKEN}`,
     },
   }
 })

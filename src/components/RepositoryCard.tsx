@@ -1,17 +1,13 @@
 import { FC } from 'react'
 import { useReactiveVar } from '@apollo/client'
 
-import { IconButton, Paper, Rating } from '@mui/material'
+import { IconButton, Paper } from '@mui/material'
 import { styled } from '@mui/material/styles'
 import BookmarkIcon from '@mui/icons-material/Bookmark'
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder'
 
 import { RepositoryItemFragment } from '../graphql/queries/repository/repository.generated.ts'
 import { favoritesVar } from '../cache.ts'
-
-interface Props {
-  repository: RepositoryItemFragment
-}
 
 const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
@@ -21,7 +17,11 @@ const Item = styled(Paper)(({ theme }) => ({
   lineHeight: '60px',
 }))
 
-const RepositoryItem: FC<Props> = ({ repository }) => {
+interface Props {
+  repository: RepositoryItemFragment
+}
+
+const RepositoryCard: FC<Props> = ({ repository }) => {
   const { id, name } = repository
 
   const favorites = useReactiveVar(favoritesVar)
@@ -35,25 +35,9 @@ const RepositoryItem: FC<Props> = ({ repository }) => {
     )
   }
 
-  const ratingHandler = (value: number | null) => {
-    favoritesVar(
-      favorites.map((item) =>
-        item.id === id ? { ...item, clientRating: value || 0 } : item
-      )
-    )
-  }
-
   return (
-    <Item elevation={3}>
+    <Item elevation={2}>
       {name}
-
-      <Rating
-        name="size-large"
-        // defaultValue={repository.clientRating || 0}
-        defaultValue={0}
-        size="large"
-        onChange={(_, value) => ratingHandler(value)}
-      />
 
       <IconButton aria-label="delete" size="large" onClick={favoriteHandler}>
         {isFavorite ? (
@@ -66,4 +50,4 @@ const RepositoryItem: FC<Props> = ({ repository }) => {
   )
 }
 
-export default RepositoryItem
+export default RepositoryCard

@@ -5,5 +5,5 @@ extensions:
       url: https://api.github.com/graphql
       headers:
         user-agent: JS GraphQL
-        authorization: 'Bearer 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'
+        authorization: 'Bearer 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'
       introspect: false

@@ -1,7 +1,7 @@
 import { makeVar, InMemoryCache } from '@apollo/client'
-import { Favorite } from './types.generated.ts'
+import { FavoriteItemFragment } from './graphql/queries/favorites/favorites.generated.ts'
 
-export const favoritesVar = makeVar<Favorite[]>([])
+export const favoritesVar = makeVar<FavoriteItemFragment[]>([])
 
 export const CustomInMemoryCache = new InMemoryCache({
   typePolicies: {

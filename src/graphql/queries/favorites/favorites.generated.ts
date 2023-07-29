@@ -3,12 +3,20 @@ import * as Types from '../../../types.generated';
 import { gql } from '@apollo/client';
 import * as Apollo from '@apollo/client';
 const defaultOptions = {} as const;
+export type FavoriteItemFragment = { __typename?: 'Repository', id: string, name: string, clientRating?: number | null };
+
 export type GetFavoritesQueryVariables = Types.Exact<{ [key: string]: never; }>;
 
 
 export type GetFavoritesQuery = { __typename?: 'Query', favorites?: Array<{ __typename?: 'Repository', id: string, name: string, clientRating?: number | null } | null> | null };
 
-
+export const FavoriteItemFragmentDoc = gql`
+    fragment FavoriteItem on Repository {
+  id
+  name
+  clientRating @client
+}
+    `;
 export const GetFavoritesDocument = gql`
     query GetFavorites {
   favorites @client {
