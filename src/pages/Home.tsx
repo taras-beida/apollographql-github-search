@@ -1,16 +1,19 @@
-import { ChangeEvent, useState } from 'react'
-
-import { Skeleton, Stack, TextField } from '@mui/material'
-import ErrorIcon from '@mui/icons-material/Error'
-
-import RepositoryCard from '../components/RepositoryCard.tsx'
+import { ChangeEvent } from 'react'
+import { useReactiveVar } from '@apollo/client'
+import { Stack, TextField, Typography } from '@mui/material'
 
 import { useDebounce } from '../hooks/useDebounce.ts'
 import { useSearchRepositoriesQuery } from '../graphql/queries/search/search.generated.ts'
 
+import RepositoryCard from '../components/RepositoryCard.tsx'
+import ListLoader from '../components/ListLoader.tsx'
+import QueryErrorMessage from '../components/QueryErrorMessage.tsx'
+
+import { searchRepositoriesVar } from '../cache.ts'
+
 const Home = () => {
-  const [searchValue, setSearchValue] = useState('')
-  const debouncedSearchValue = useDebounce(searchValue, 500)
+  const cachedSearch = useReactiveVar(searchRepositoriesVar)
+  const debouncedSearchValue = useDebounce(cachedSearch, 500)
 
   const { data, loading, error } = useSearchRepositoriesQuery({
     variables: {
@@ -19,16 +22,10 @@ const Home = () => {
   })
 
   const searchHandler = (e: ChangeEvent<HTMLInputElement>) => {
-    setSearchValue(e.target.value)
+    searchRepositoriesVar(e.target.value)
   }
 
-  if (error) {
-    return (
-      <div>
-        <ErrorIcon /> {error.message}
-      </div>
-    )
-  }
+  if (error) return <QueryErrorMessage error={error} />
 
   return (
     <div>
@@ -37,18 +34,18 @@ const Home = () => {
         label="Search"
         variant="outlined"
         margin="normal"
-        value={searchValue}
+        value={cachedSearch}
         onChange={searchHandler}
         sx={{ mb: 2 }}
         fullWidth
       />
 
-      {loading && (
-        <Stack spacing={2}>
-          <Skeleton variant="rounded" height={60} />
-          <Skeleton variant="rounded" height={60} />
-          <Skeleton variant="rounded" height={60} />
-        </Stack>
+      {loading && <ListLoader />}
+
+      {!loading && !data?.search.nodes?.length && (
+        <Typography variant="h6" align="center" gutterBottom>
+          No results
+        </Typography>
       )}
 
       <Stack spacing={2}>

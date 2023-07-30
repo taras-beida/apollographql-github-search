@@ -1,21 +1,13 @@
 import { FC } from 'react'
 import { useReactiveVar } from '@apollo/client'
 
-import { IconButton, Paper } from '@mui/material'
-import { styled } from '@mui/material/styles'
+import { IconButton } from '@mui/material'
 import BookmarkIcon from '@mui/icons-material/Bookmark'
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder'
 
 import { RepositoryItemFragment } from '../graphql/queries/repository/repository.generated.ts'
 import { favoritesVar } from '../cache.ts'
-
-const Item = styled(Paper)(({ theme }) => ({
-  ...theme.typography.body2,
-  textAlign: 'center',
-  color: theme.palette.text.secondary,
-  height: 60,
-  lineHeight: '60px',
-}))
+import ListCard from './ListCard.tsx'
 
 interface Props {
   repository: RepositoryItemFragment
@@ -36,9 +28,7 @@ const RepositoryCard: FC<Props> = ({ repository }) => {
   }
 
   return (
-    <Item elevation={2}>
-      {name}
-
+    <ListCard title={name}>
       <IconButton aria-label="delete" size="large" onClick={favoriteHandler}>
         {isFavorite ? (
           <BookmarkIcon fontSize="inherit" />
@@ -46,7 +36,7 @@ const RepositoryCard: FC<Props> = ({ repository }) => {
           <BookmarkBorderIcon fontSize="inherit" />
         )}
       </IconButton>
-    </Item>
+    </ListCard>
   )
 }
 

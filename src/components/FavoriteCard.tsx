@@ -1,20 +1,12 @@
 import { FC } from 'react'
 import { useReactiveVar } from '@apollo/client'
 
-import { styled } from '@mui/material/styles'
-import { IconButton, Paper, Rating } from '@mui/material'
+import { IconButton, Rating } from '@mui/material'
 import DeleteIcon from '@mui/icons-material/Delete'
 
 import { FavoriteItemFragment } from '../graphql/queries/favorites/favorites.generated.ts'
 import { favoritesVar } from '../cache.ts'
-
-const Item = styled(Paper)(({ theme }) => ({
-  ...theme.typography.body2,
-  textAlign: 'center',
-  color: theme.palette.text.secondary,
-  height: 60,
-  lineHeight: '60px',
-}))
+import ListCard from './ListCard.tsx'
 
 interface Props {
   favorite: FavoriteItemFragment
@@ -37,9 +29,7 @@ const FavoriteCard: FC<Props> = ({ favorite }) => {
   }
 
   return (
-    <Item elevation={2}>
-      {name}
-
+    <ListCard title={name}>
       <Rating
         name="size-large"
         value={clientRating || 0}
@@ -50,7 +40,7 @@ const FavoriteCard: FC<Props> = ({ favorite }) => {
       <IconButton aria-label="delete" size="large" onClick={deleteHandler}>
         <DeleteIcon fontSize="inherit" />
       </IconButton>
-    </Item>
+    </ListCard>
   )
 }
 
