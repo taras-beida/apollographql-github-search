@@ -18,7 +18,7 @@ const Favorites = () => {
   }
 
   return (
-    <Stack spacing={2}>
+    <Stack spacing={2} sx={{ mb: 5 }}>
       {data?.favorites?.map(
         (item) => item && <FavoriteCard key={item.id} favorite={item} />
       )}

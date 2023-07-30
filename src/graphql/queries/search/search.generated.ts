@@ -14,7 +14,7 @@ export type SearchRepositoriesQuery = { __typename?: 'Query', search: { __typena
 
 export const SearchRepositoriesDocument = gql`
     query SearchRepositories($query: String!) {
-  search(query: $query, type: REPOSITORY, first: 10) {
+  search(query: $query, type: REPOSITORY, first: 20) {
     nodes {
       ...RepositoryItem
     }

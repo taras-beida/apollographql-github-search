@@ -48,7 +48,7 @@ const Home = () => {
         </Typography>
       )}
 
-      <Stack spacing={2}>
+      <Stack spacing={2} sx={{ mb: 5 }}>
         {data?.search.nodes?.map(
           (node) =>
             node?.__typename === 'Repository' && (
