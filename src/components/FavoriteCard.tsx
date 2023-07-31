@@ -1,12 +1,14 @@
-import { FC } from 'react'
+import { FC, useState } from 'react'
 import { useReactiveVar } from '@apollo/client'
 
-import { IconButton, Rating } from '@mui/material'
+import { Button, IconButton, Rating } from '@mui/material'
 import DeleteIcon from '@mui/icons-material/Delete'
 
 import { FavoriteItemFragment } from '../graphql/queries/favorites/favorites.generated.ts'
 import { favoritesVar } from '../cache.ts'
+
 import ListCard from './ListCard.tsx'
+import AppDialog from './AppDialog.tsx'
 
 interface Props {
   favorite: FavoriteItemFragment
@@ -15,6 +17,8 @@ interface Props {
 const FavoriteCard: FC<Props> = ({ favorite }) => {
   const { id, name, clientRating } = favorite
   const favorites = useReactiveVar(favoritesVar)
+
+  const [isConfirmDelete, setConfirmDelete] = useState(false)
 
   const ratingHandler = (value: number | null) => {
     favoritesVar(
@@ -25,6 +29,7 @@ const FavoriteCard: FC<Props> = ({ favorite }) => {
   }
 
   const deleteHandler = () => {
+    setConfirmDelete(false)
     favoritesVar(favorites.filter((item) => item.id !== id))
   }
 
@@ -37,9 +42,35 @@ const FavoriteCard: FC<Props> = ({ favorite }) => {
         onChange={(_, value) => ratingHandler(value)}
       />
 
-      <IconButton aria-label="delete" size="large" onClick={deleteHandler}>
+      <IconButton
+        aria-label="delete"
+        size="large"
+        onClick={() => setConfirmDelete(true)}
+      >
         <DeleteIcon fontSize="inherit" />
       </IconButton>
+
+      <AppDialog
+        title="Delete"
+        content="Are you sure you want to delete this item?"
+        isOpen={isConfirmDelete}
+        onCancel={() => setConfirmDelete(false)}
+        cancelButton={
+          <Button variant="contained" onClick={() => setConfirmDelete(false)}>
+            Cancel
+          </Button>
+        }
+        confirmButton={
+          <Button
+            variant="contained"
+            onClick={deleteHandler}
+            color="error"
+            autoFocus
+          >
+            Delete
+          </Button>
+        }
+      />
     </ListCard>
   )
 }
